@@ -11,7 +11,9 @@ class App extends Component {
 
     this.state = {
 
-      sequence: []
+      sequence: [],
+      currentBeat: 0,
+      sequenceIndex: 0,
 
     }
 
@@ -19,8 +21,6 @@ class App extends Component {
 
       context: new AudioContext(),
       nextNoteTime: 0,
-      sequenceIndex: 0,
-      currentBeat: 0,
       stopped: false,
       interval: null
 
@@ -72,8 +72,8 @@ class App extends Component {
 
   getNextNote = () => {
 
-    let { sequenceIndex, currentBeat, nextNoteTime } = this.bpmStuff;
-    let { sequence } = this.state;
+    let { nextNoteTime } = this.bpmStuff;
+    let { sequence, sequenceIndex, currentBeat } = this.state;
 
     nextNoteTime += 60.0 / sequence[sequenceIndex].bpm * (4.0 / sequence[sequenceIndex].bottom);
 
@@ -93,14 +93,15 @@ class App extends Component {
     }
 
     this.bpmStuff.nextNoteTime = nextNoteTime;
-    this.bpmStuff.currentBeat = currentBeat;
-    this.bpmStuff.sequenceIndex = sequenceIndex;
+    this.setState({currentBeat: currentBeat, sequenceIndex: sequenceIndex});
 
   }
 
   schedule = time => {
 
-    const { context, currentBeat, sequenceIndex } = this.bpmStuff;
+    const { context } = this.bpmStuff;
+
+    const { currentBeat, sequenceIndex } = this.state;
 
     let osc = context.createOscillator();
     osc.connect(context.destination);
@@ -129,7 +130,7 @@ class App extends Component {
     return (
       <div className="App">
         <ControlPanel play={this.play} stop={this.stop} updateBPM={this.updateBPM} createSequence={this.createSequence}/>
-        <Sequencer list={this.state.sequence} />
+        <Sequencer list={this.state.sequence} currentIndex={this.state.sequenceIndex} currentBeat={this.state.currentBeat}/>
       </div>
     );
   }
