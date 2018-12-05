@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import ControlPanel from './components/ControlPanel';
+import Sequencer from './components/Sequencer';
 
 class App extends Component {
 
@@ -8,11 +9,16 @@ class App extends Component {
 
     super();
 
+    this.state = {
+
+      sequence: []
+
+    }
+
     this.bpmStuff = {
 
       context: new AudioContext(),
       nextNoteTime: 0,
-      sequence: [{bpm: 120, top: 4, bottom: 4}],
       sequenceIndex: 0,
       currentBeat: 0,
       stopped: false,
@@ -25,6 +31,8 @@ class App extends Component {
   play = () => {
 
     this.bpmStuff.nextNoteTime = this.bpmStuff.context.currentTime + 0.2;
+    this.bpmStuff.currentBeat = 0;
+    this.bpmStuff.sequenceIndex = 0;
 
     this.bpmStuff.interval = setInterval(this.scheduler, 100);
 
@@ -55,16 +63,17 @@ class App extends Component {
 
   stop = () => {
 
-    this.bpmStuff.stopped = true;
     this.bpmStuff.currentBeat = 0;
     this.bpmStuff.sequenceIndex = 0;
     this.bpmStuff.nextNoteTime = 0;
+    this.bpmStuff.stopped = true;
 
   }
 
   getNextNote = () => {
 
-    let { sequence, sequenceIndex, currentBeat, nextNoteTime } = this.bpmStuff;
+    let { sequenceIndex, currentBeat, nextNoteTime } = this.bpmStuff;
+    let { sequence } = this.state;
 
     nextNoteTime += 60.0 / sequence[sequenceIndex].bpm * (4.0 / sequence[sequenceIndex].bottom);
 
@@ -91,14 +100,15 @@ class App extends Component {
 
   schedule = time => {
 
-    const { context, currentBeat } = this.bpmStuff;
+    const { context, currentBeat, sequenceIndex } = this.bpmStuff;
 
     let osc = context.createOscillator();
     osc.connect(context.destination);
 
-    console.log(currentBeat, time);
+    if (currentBeat === 0 && sequenceIndex === 0)
+      osc.frequency.value = 1760;
 
-    if (currentBeat === 0)
+    else if (currentBeat === 0)
       osc.frequency.value = 880;
 
     else
@@ -109,16 +119,17 @@ class App extends Component {
 
   }
 
-  updateBPM = e => {
+  createSequence = (bpm, top, bottom) => {
 
-    this.bpmStuff.sequence[this.bpmStuff.sequenceIndex].bpm = parseInt(e.target.value);
+    this.setState({sequence: [...this.state.sequence, {bpm: bpm, top: top, bottom: bottom}]});
 
   }
 
   render() {
     return (
       <div className="App">
-        <ControlPanel play={this.play} stop={this.stop} updateBPM={this.updateBPM}/>
+        <ControlPanel play={this.play} stop={this.stop} updateBPM={this.updateBPM} createSequence={this.createSequence}/>
+        <Sequencer list={this.state.sequence} />
       </div>
     );
   }
