@@ -3,6 +3,8 @@ import React, { Component } from 'react';
 import ControlPanel from './components/ControlPanel';
 import Sequencer from './components/Sequencer';
 
+import './App.scss';
+
 class App extends Component {
 
   constructor() {
@@ -31,8 +33,8 @@ class App extends Component {
   play = () => {
 
     this.bpmStuff.nextNoteTime = this.bpmStuff.context.currentTime + 0.2;
-    this.bpmStuff.currentBeat = 0;
-    this.bpmStuff.sequenceIndex = 0;
+
+    this.setState({currentBeat: 0, sequenceIndex: 0})
 
     this.bpmStuff.interval = setInterval(this.scheduler, 100);
 
@@ -128,7 +130,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="app">
         <ControlPanel play={this.play} stop={this.stop} updateBPM={this.updateBPM} createSequence={this.createSequence}/>
         <Sequencer list={this.state.sequence} currentIndex={this.state.sequenceIndex} currentBeat={this.state.currentBeat}/>
       </div>

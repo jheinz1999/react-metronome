@@ -1,0 +1,57 @@
+.control-panel {
+
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+
+  .control-btns {
+
+    margin: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    button {
+
+      width: 10%;
+      margin: 5px;
+
+    }
+
+  }
+
+  .add-form {
+
+    form {
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+
+      .change-bpm {
+
+        margin: 5px;
+
+      }
+
+      .time-group {
+
+        display: flex;
+        align-items: center;
+
+        select {
+
+          width: 30px;
+          height: 20px;
+
+        }
+
+      }
+
+    }
+
+  }
+
+}

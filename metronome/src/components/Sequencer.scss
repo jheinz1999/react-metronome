@@ -1,0 +1,22 @@
+.sequencer {
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 70%;
+
+  .metronome {
+
+    h3, h4 {
+
+      margin: 0
+
+    }
+
+    text-align: center;
+    border: 1px solid black;
+    margin: 2.5px;
+
+  }
+
+}

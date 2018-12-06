@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './Sequencer.scss';
+
 export default function Sequencer({list, currentIndex, currentBeat}) {
 
   if (currentBeat === 0 && list[currentIndex]) {
@@ -9,7 +11,7 @@ export default function Sequencer({list, currentIndex, currentBeat}) {
       currentIndex = list.length - 1;
 
     currentBeat = list[currentIndex].top;
-    
+
   }
 
   return (
